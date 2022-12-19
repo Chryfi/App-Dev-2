@@ -17,7 +17,7 @@ public class Rechnung {
     }
 
     public int getNr() {
-        return nr;
+        return this.nr;
     }
 
     public void setNr(int nr) {
@@ -25,7 +25,7 @@ public class Rechnung {
     }
 
     public Timestamp getDatum() {
-        return datum;
+        return this.datum;
     }
 
     public void setDatum(Timestamp datum) {
@@ -33,7 +33,7 @@ public class Rechnung {
     }
 
     public boolean getOffen() {
-        return offen;
+        return this.offen;
     }
 
     public void setOffen(boolean offen) {

@@ -11,5 +11,9 @@ public abstract class EntityTable<T> {
         this.db = db;
     }
 
+    public Database getDatabase() {
+        return this.db;
+    }
+
     public abstract boolean insert(T entity) throws SQLException;
 }

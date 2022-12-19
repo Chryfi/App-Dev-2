@@ -1,22 +1,35 @@
-package main.java.de.appdev2.server.database.tables;
-
-import main.java.de.appdev2.entities.Lieferant;
+package main.java.de.appdev2.entities;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Bestellung {
+
     private int nr;
     private Timestamp lieferdatum;
-
     private Lieferant lieferant;
-    private Set<WarenBestellung> waren;
+    private final Set<WarenBestellung> waren = new HashSet<>();
+    private Rechnung rechnung;
 
-    public Bestellung(int nr, Timestamp lieferdatum, Set<Warenbestellung> waren, Lieferant lieferant){
+    public Bestellung (int nr, Timestamp lieferdatum, Set<WarenBestellung> waren, Lieferant lieferant) {
+        this(nr, lieferdatum, waren, lieferant, null);
+    }
+
+    public Bestellung (int nr, Timestamp lieferdatum, Set<WarenBestellung> waren, Lieferant lieferant, Rechnung rechnung) {
         this.nr = nr;
         this.lieferdatum = lieferdatum;
-        this.waren = waren;
+        this.waren.addAll(waren);
         this.lieferant = lieferant;
+        this.rechnung = rechnung;
+    }
+
+    public Rechnung getRechnung() {
+        return this.rechnung;
+    }
+
+    public void setRechnung(Rechnung rechnung) {
+        this.rechnung = rechnung;
     }
 
     public void setLieferdatum(Timestamp lieferdatum) {
@@ -36,7 +49,8 @@ public class Bestellung {
     }
 
     public void setWaren(Set<WarenBestellung> waren) {
-        this.waren = waren;
+        this.waren.clear();
+        this.waren.addAll(waren);
     }
 
     public Set<WarenBestellung> getWaren() {
@@ -44,7 +58,7 @@ public class Bestellung {
     }
 
     public Lieferant getLieferant() {
-        return lieferant;
+        return this.lieferant;
     }
 
     public void setLieferant(Lieferant lieferant) {
