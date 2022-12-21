@@ -1,48 +1,45 @@
-	package main.java.de.appdev2.server.database.tables;
-	
+package main.java.de.appdev2.server.database.tables;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import main.java.de.appdev2.entities.Lieferant;
 import main.java.de.appdev2.server.database.Database;
-	
 
 
-public class LieferantTable extends EntityTable<Lieferant>{
+public class LieferantTable extends EntityTable<Lieferant> {
 
+    public LieferantTable(Database db) {
+        super(db);
+    }
 
-	    public LieferantTable(Database db) {
-	        super(db);
-	    }
+    @Override
+    public boolean insert(Lieferant entity) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("INSERT INTO lieferant (name) VALUES (?) RETURNING lieferant.nr");
 
-	    @Override
-	    public boolean insert(Lieferant entity) throws SQLException {
-	        PreparedStatement stmt = this.db.prepare("INSERT INTO lieferant (name) VALUES (?) RETURNING lieferant.nr");
+        stmt.setString(1, entity.getName());
 
-	        stmt.setString(1, entity.getName());
+        ResultSet nr = stmt.executeQuery();
 
-	        ResultSet nr = stmt.executeQuery();
+        if (!nr.next()) return false;//Wenn Eintrag leer -> false
 
-	        if (!nr.next()) return false;//Wenn Eintrag leer -> false
+        entity.setNr(nr.getInt("nr"));
 
-	        entity.setNr(nr.getInt("nr"));
+        return true;
+    }
 
-	        return true;
-	    }
+    public Lieferant getLieferant(int nr) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("SELECT * FROM lieferant WHERE=?");
 
-	    public Lieferant getLieferant(int nr) throws SQLException {
-	        PreparedStatement stmt = this.db.prepare("SELECT * FROM lieferant WHERE=?");
+        stmt.setInt(1, nr);
 
-	        stmt.setInt(1, nr);
+        ResultSet set = stmt.executeQuery();
 
-	        ResultSet set = stmt.executeQuery();
+        if (!set.next()) return null;
 
-	        if (!set.next()) return null;
+        return new Lieferant(set.getInt("nr"), set.getString("name"));
+    }
 
-	        Lieferant lieferant = new Lieferant(set.getInt("nr"), set.getString("name"));
-
-	        return lieferant;
-	    }
-	
 
 }

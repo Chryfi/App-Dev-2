@@ -1,60 +1,33 @@
 package main.java.de.appdev2.entities;
 
-import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
 
 public class Bestellung {
 
     private int nr;
-    private Timestamp lieferdatum;
+    private Date lieferdatum;
     private Lieferant lieferant;
-    private final Set<WarenBestellung> waren = new HashSet<>();
-    private Rechnung rechnung;
 
-    public Bestellung (int nr, Timestamp lieferdatum, Set<WarenBestellung> waren, Lieferant lieferant) {
-        this(nr, lieferdatum, waren, lieferant, null);
-    }
-
-    public Bestellung (int nr, Timestamp lieferdatum, Set<WarenBestellung> waren, Lieferant lieferant, Rechnung rechnung) {
+    public Bestellung(int nr, Date lieferdatum, Lieferant lieferant) {
         this.nr = nr;
         this.lieferdatum = lieferdatum;
-        this.waren.addAll(waren);
         this.lieferant = lieferant;
-        this.rechnung = rechnung;
-    }
-
-    public Rechnung getRechnung() {
-        return this.rechnung;
-    }
-
-    public void setRechnung(Rechnung rechnung) {
-        this.rechnung = rechnung;
-    }
-
-    public void setLieferdatum(Timestamp lieferdatum) {
-        this.lieferdatum = lieferdatum;
     }
 
     public int getNr() {
         return this.nr;
     }
 
-    public Timestamp getLieferdatum() {
-        return this.lieferdatum;
-    }
-
     public void setNr(int nr) {
         this.nr = nr;
     }
 
-    public void setWaren(Set<WarenBestellung> waren) {
-        this.waren.clear();
-        this.waren.addAll(waren);
+    public Date getLieferdatum() {
+        return this.lieferdatum;
     }
 
-    public Set<WarenBestellung> getWaren() {
-        return new HashSet<>(this.waren);
+    public void setLieferdatum(Date lieferdatum) {
+        this.lieferdatum = lieferdatum;
     }
 
     public Lieferant getLieferant() {
@@ -63,5 +36,11 @@ public class Bestellung {
 
     public void setLieferant(Lieferant lieferant) {
         this.lieferant = lieferant;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) || obj instanceof Bestellung bestellung && this.nr == bestellung.nr
+                && this.lieferdatum.equals(bestellung.lieferdatum) && this.lieferant.equals(bestellung.lieferant);
     }
 }

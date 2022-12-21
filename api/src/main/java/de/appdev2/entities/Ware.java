@@ -1,39 +1,29 @@
 package main.java.de.appdev2.entities;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-
 public class Ware {
+
     private int nr;
     private float stueckpreis;
     private int stueckzahl;
     private String bezeichnung;
-    private final Set<WarenBestellung> bestellungen = new HashSet<>();
 
-    public Ware(int nr, float stueckpreis, int stueckzahl, String bezeichnung) {
-        this(nr, stueckpreis, stueckzahl, bezeichnung, new HashSet<>());
+    /**
+     * Notwendige Daten um in die Datenbank einzufügen.
+     * Der Primärschlüssel hat "Auto Increment", daher muss er hier nicht definiert werden.
+     *
+     * @param stueckpreis
+     * @param stueckzahl
+     * @param bezeichnung
+     */
+    public Ware(float stueckpreis, int stueckzahl, String bezeichnung) {
+        this(-1, stueckpreis, stueckzahl, bezeichnung);
     }
 
-    public Ware(int nr, float stueckpreis, int stueckzahl, String bezeichnung, Set<WarenBestellung> bestellungen) {
+    public Ware(int nr, float stueckpreis, int stueckzahl, String bezeichnung) {
         this.nr = nr;
         this.stueckpreis = stueckpreis;
         this.stueckzahl = stueckzahl;
         this.bezeichnung = bezeichnung;
-        this.bestellungen.addAll(bestellungen);
-    }
-
-    public Set<WarenBestellung> getBestellungen() {
-        return new HashSet<>(this.bestellungen);
-    }
-
-    public void addBestellung(WarenBestellung bestellung) {
-        this.bestellungen.add(bestellung);
-    }
-
-    public void setBestellungen(Set<WarenBestellung> bestellungen) {
-        this.bestellungen.clear();
-        this.bestellungen.addAll(bestellungen);
     }
 
     public int getNr() {
@@ -66,5 +56,11 @@ public class Ware {
 
     public void setBezeichnung(String bezeichnung) {
         this.bezeichnung = bezeichnung;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) || (obj instanceof Ware ware && this.stueckpreis == ware.stueckpreis
+                && this.bezeichnung.equals(ware.bezeichnung) && this.nr == ware.nr && this.stueckzahl == ware.stueckzahl);
     }
 }

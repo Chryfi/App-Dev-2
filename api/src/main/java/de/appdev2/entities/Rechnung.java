@@ -1,18 +1,38 @@
 package main.java.de.appdev2.entities;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class Rechnung {
 
-    private int nr;
-    private Timestamp datum;
-    private boolean offen;
     private Bestellung bestellung;
+    private int nr;
+    private Date datum;
+    private boolean offen;
 
-    public Rechnung(int nr, Timestamp datum, boolean offen, Bestellung bestellung) {
+    /**
+     * Notwendige Daten um in die Datenbank einzufügen.
+     * Der Primärschlüssel hat "Auto Increment", daher muss er hier nicht definiert werden.
+     *
+     * @param bestellung
+     * @param datum
+     * @param offen
+     */
+    public Rechnung(Bestellung bestellung, Date datum, boolean offen) {
+        this(-1, bestellung, datum, offen);
+    }
+
+    public Rechnung(int nr, Bestellung bestellung, Date datum, boolean offen) {
         this.nr = nr;
         this.datum = datum;
         this.offen = offen;
+        this.bestellung = bestellung;
+    }
+
+    public Bestellung getBestellung() {
+        return this.bestellung;
+    }
+
+    public void setBestellung(Bestellung bestellung) {
         this.bestellung = bestellung;
     }
 
@@ -24,15 +44,15 @@ public class Rechnung {
         this.nr = nr;
     }
 
-    public Timestamp getDatum() {
+    public Date getDatum() {
         return this.datum;
     }
 
-    public void setDatum(Timestamp datum) {
+    public void setDatum(Date datum) {
         this.datum = datum;
     }
 
-    public boolean getOffen() {
+    public boolean isOffen() {
         return this.offen;
     }
 
@@ -40,11 +60,15 @@ public class Rechnung {
         this.offen = offen;
     }
 
-    public Bestellung getBestellung() {
-        return bestellung;
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) || obj instanceof Rechnung rechnung && this.bestellung.equals(rechnung.bestellung)
+                && this.nr == rechnung.nr && this.datum.equals(rechnung.datum) && this.offen == rechnung.offen;
     }
 
-    public void setBestellung(Bestellung bestellung) {
-        this.bestellung = bestellung;
+    @Override
+    public String toString() {
+        return "Rechnung[nr = " + this.nr + ", datum = " + this.datum
+                + ", offen = " + this.offen + ", bestellung = " + this.bestellung +"]";
     }
 }

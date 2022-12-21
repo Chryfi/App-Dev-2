@@ -1,35 +1,22 @@
 package main.java.de.appdev2.entities;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Lieferant{
 	
 	private int nr;
 	private String name;
-	private final Set<Bestellung> bestellungen = new HashSet<>();
-	
-	public Lieferant(int nr, String name) {
-		this(nr, name, new HashSet<>());
+
+	/**
+	 * Notwendige Daten um in die Datenbank einzufügen.
+	 * Der Primärschlüssel hat "Auto Increment", daher muss er hier nicht definiert werden.
+	 * @param name
+	 */
+	public Lieferant(String name) {
+		this(-1, name);
 	}
 
-	public Lieferant(int nr, String name, Set<Bestellung> bestellungen) {
+	public Lieferant(int nr, String name) {
 		this.nr = nr;
 		this.name = name;
-		this.bestellungen.addAll(bestellungen);
-	}
-
-	public Set<Bestellung> getBestellungen() {
-		return new HashSet<>(this.bestellungen);
-	}
-
-	public void setBestellungen(Set<Bestellung> bestellungen) {
-		this.bestellungen.clear();
-		this.bestellungen.addAll(bestellungen);
-	}
-
-	public void addBestellung(Bestellung bestellung) {
-		this.bestellungen.add(bestellung);
 	}
 
 	public int getNr() {
@@ -46,5 +33,11 @@ public class Lieferant{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj) || obj instanceof Lieferant lieferant && this.nr == lieferant.nr
+				&& this.name.equals(lieferant.name);
 	}
 }

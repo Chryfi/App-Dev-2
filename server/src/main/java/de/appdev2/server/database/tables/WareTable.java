@@ -39,9 +39,7 @@ public class WareTable extends EntityTable<Ware> {
 
         if (!set.next()) return null;
 
-        Ware ware = new Ware(set.getInt("nr"), set.getFloat("stueckpreis"),
+        return new Ware(set.getInt("nr"), set.getFloat("stueckpreis"),
                 set.getInt("stueckzahl"), set.getString("bezeichnung"));
-
-        return ware;
     }
 }

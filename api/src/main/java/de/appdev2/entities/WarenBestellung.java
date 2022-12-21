@@ -1,7 +1,5 @@
 package main.java.de.appdev2.entities;
 
-import main.java.de.appdev2.server.database.tables.WarenBestellungTable;
-
 public class WarenBestellung {
 
     private Bestellung bestellung;
@@ -46,5 +44,12 @@ public class WarenBestellung {
 
     public void setGelieferteMenge(int gelieferteMenge) {
         this.gelieferteMenge = gelieferteMenge;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) || obj instanceof WarenBestellung wb && this.bestellung.equals(wb.bestellung)
+                && this.ware.equals(wb.ware) && this.bestellteMenge == wb.bestellteMenge
+                && this.gelieferteMenge == wb.gelieferteMenge;
     }
 }
