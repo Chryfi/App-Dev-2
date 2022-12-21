@@ -36,6 +36,11 @@ public class Lieferant{
 	}
 
 	@Override
+	public String toString() {
+		return "Lieferant[nr = " + this.nr + ", name = " + this.name +"]";
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		return super.equals(obj) || obj instanceof Lieferant lieferant && this.nr == lieferant.nr
 				&& this.name.equals(lieferant.name);

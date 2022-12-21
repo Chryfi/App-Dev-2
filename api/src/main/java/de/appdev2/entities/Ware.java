@@ -59,8 +59,14 @@ public class Ware {
     }
 
     @Override
+    public String toString() {
+        return "Ware[nr = " + this.nr + ", stückpreis = " + this.stueckpreis + ", stückzahl = "
+                + this.stueckzahl + ", bezeichnung = " + this.bezeichnung + "]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
-        return super.equals(obj) || (obj instanceof Ware ware && this.stueckpreis == ware.stueckpreis
-                && this.bezeichnung.equals(ware.bezeichnung) && this.nr == ware.nr && this.stueckzahl == ware.stueckzahl);
+        return super.equals(obj) || obj instanceof Ware ware && this.stueckpreis == ware.stueckpreis
+                && this.bezeichnung.equals(ware.bezeichnung) && this.nr == ware.nr && this.stueckzahl == ware.stueckzahl;
     }
 }

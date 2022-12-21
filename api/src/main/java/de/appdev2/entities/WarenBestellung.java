@@ -47,6 +47,12 @@ public class WarenBestellung {
     }
 
     @Override
+    public String toString() {
+        return "WarenBestellung[bestellung = " + this.bestellung + ", ware = " + this.ware
+                + ", bestellteMenge = " + this.bestellteMenge + ", gelieferteMenge = " + this.gelieferteMenge +"]";
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return super.equals(obj) || obj instanceof WarenBestellung wb && this.bestellung.equals(wb.bestellung)
                 && this.ware.equals(wb.ware) && this.bestellteMenge == wb.bestellteMenge
