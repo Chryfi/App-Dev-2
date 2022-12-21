@@ -47,4 +47,23 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
         return new WarenBestellung(ware, bestellung,
                 set.getInt("bestellte_menge"), set.getInt("gelieferte_menge"));
     }
+
+    public Set<WarenBestellung> getWarenBestellungen(Bestellung bestellung) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("SELECT * FROM ware_bestellung WHERE bestellnummer=? AND lieferantennr=?");
+        stmt.setInt(1, bestellung.getNr());
+        stmt.setInt(2, bestellung.getLieferant().getNr());
+
+        ResultSet set = stmt.executeQuery();
+
+        Set<WarenBestellung> bestellungen = new HashSet<>();
+
+        while (set.next()) {
+            Ware ware = this.db.getWareTable().getWare(set.getInt("warennummer"));
+
+            bestellungen.add(new WarenBestellung(ware, bestellung,
+                    set.getInt("bestellte_menge"), set.getInt("gelieferte_menge")));
+        }
+
+        return bestellungen;
+    }
 }

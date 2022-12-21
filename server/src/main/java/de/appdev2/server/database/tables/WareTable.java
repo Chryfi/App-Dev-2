@@ -31,7 +31,7 @@ public class WareTable extends EntityTable<Ware> {
     }
 
     public Ware getWare(int nr) throws SQLException {
-        PreparedStatement stmt = this.db.prepare("SELECT * FROM ware WHERE=?");
+        PreparedStatement stmt = this.db.prepare("SELECT * FROM ware WHERE nr=?");
 
         stmt.setInt(1, nr);
 

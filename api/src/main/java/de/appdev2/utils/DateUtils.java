@@ -25,7 +25,7 @@ public class DateUtils {
      * @return zufälliges Datum
      */
     public static Date getRandomDate(int minYear, int maxYear) {
-        int year = minYear + (int) (Math.random() * maxYear);
+        int year = minYear + (int) (Math.random() * (maxYear - minYear));
         int month = (int) Math.round(Math.random() * 12);
         int day = (int) Math.round(Math.random() * 31);
         return getDate(year, month, day);

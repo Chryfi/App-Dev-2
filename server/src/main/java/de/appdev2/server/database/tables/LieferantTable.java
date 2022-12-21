@@ -30,7 +30,7 @@ public class LieferantTable extends EntityTable<Lieferant> {
     }
 
     public Lieferant getLieferant(int nr) throws SQLException {
-        PreparedStatement stmt = this.db.prepare("SELECT * FROM lieferant WHERE=?");
+        PreparedStatement stmt = this.db.prepare("SELECT * FROM lieferant WHERE nr=?");
 
         stmt.setInt(1, nr);
 

@@ -24,6 +24,14 @@ public class BestellungTable extends EntityTable<Bestellung> {
         return stmnt.executeUpdate() != 0;
     }
 
+    /**
+     * Liest die Bestellung aus der Datenbank aus
+     *
+     * @param bestellnr
+     * @param lieferantennr
+     * @return die Bestellung oder null, wenn es keine solche Bestellung in der Datenbank gibt.
+     * @throws SQLException
+     */
     public Bestellung getBestellung(int bestellnr, int lieferantennr) throws SQLException {
         PreparedStatement stmt = this.db.prepare("SELECT * FROM bestellung WHERE bestellnummer = ? AND lieferantennr = ?");
         stmt.setInt(1, bestellnr);
