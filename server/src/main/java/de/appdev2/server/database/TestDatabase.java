@@ -6,104 +6,181 @@ import main.java.de.appdev2.utils.DateUtils;
 
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Function;
 
+/**
+ * Eine Klasse die zufallsgenerierte Daten testet.
+ */
 public class TestDatabase {
     private final Database db;
-    private final List<TestTable<?>> testData = new LinkedList<>();
+
+    /**
+     * Wieviele Bestellungen erzeugt werden sollen
+     */
+    private int bestellungCount;
+    /**
+     * Maximum an Waren pro Bestellung
+     */
+    private int maxWaren;
+    /**
+     * Wieviele Lieferanten erzeugt werden sollen
+     */
+    private int lieferantenCount;
+
+    private final List<TestTable<?>> testTables = new ArrayList<>();
+    private final TestTable<Lieferant> lieferanten;
+    private final TestTable<Ware> waren;
+    private final TestTable<Bestellung> bestellungen;
+    private final TestTable<WarenBestellung> warenBestellungen;
+    private final TestTable<Rechnung> rechnungen;
 
     public TestDatabase(Database db) {
-        this.db = db;
+        this(db, 10, 10, 20);
     }
 
-    public void testRandomData() throws SQLException {
-        int count = 15;
-        int maxWaren = 10;
-        int lieferantenCount = 20;
+    public TestDatabase(Database db, int bestellungCount, int maxWaren, int lieferantenCount) {
+        this.db = db;
+        this.bestellungCount = bestellungCount;
+        this.maxWaren = maxWaren;
+        this.lieferantenCount = lieferantenCount;
 
-        TestTable<Lieferant> lieferanten = new TestTable<>("Lieferanten" ,
-                this.db.getLieferantTable(), (lieferant) -> {
+        this.lieferanten = new TestTable<>("Lieferanten" , this.db.getLieferantTable(), (lieferant) -> {
             return this.db.getLieferantTable().getLieferant(lieferant.getNr());
         });
 
-        TestTable<Bestellung> bestellungen = new TestTable<>("Bestellung",
-                this.db.getBestellungTable(), (bestellung) -> {
+        this.bestellungen = new TestTable<>("Bestellung", this.db.getBestellungTable(), (bestellung) -> {
             return this.db.getBestellungTable().getBestellung(bestellung.getNr(), bestellung.getLieferant().getNr());
         });
 
-        TestTable<WarenBestellung> warenBestellungen = new TestTable<>("WarenBestellung",
-                this.db.getWarenBestellungTable(), (wb) -> {
+        this.warenBestellungen = new TestTable<>("WarenBestellung", this.db.getWarenBestellungTable(), (wb) -> {
             return this.db.getWarenBestellungTable().getWarenBestellung(wb.getWare().getNr(),
                     wb.getBestellung().getNr(), wb.getBestellung().getLieferant().getNr());
         });
 
-        TestTable<Ware> waren = new TestTable<>("Ware", this.db.getWareTable(), (ware) -> {
+        this.waren = new TestTable<>("Ware", this.db.getWareTable(), (ware) -> {
             return this.db.getWareTable().getWare(ware.getNr());
         });
 
-        TestTable<Rechnung> rechnungen = new TestTable<>("Rechnung", this.db.getRechnungTable(), (rechnung) -> {
+        this.rechnungen = new TestTable<>("Rechnung", this.db.getRechnungTable(), (rechnung) -> {
             return this.db.getRechnungTable().getRechnung(rechnung.getNr());
         });
 
-        this.testData.add(lieferanten);
-        this.testData.add(waren);
-        this.testData.add(bestellungen);
-        this.testData.add(warenBestellungen);
-        this.testData.add(rechnungen);
+        this.testTables.add(this.lieferanten);
+        this.testTables.add(this.waren);
+        this.testTables.add(this.bestellungen);
+        this.testTables.add(this.warenBestellungen);
+        this.testTables.add(this.rechnungen);
+    }
 
-        for (int i = 0; i < lieferantenCount; i++) {
-            lieferanten.add(new Lieferant("keine Ahnung"));
+    public void generateRandomData() {
+        /* Waren erstellen die keiner Bestellung angehören */
+        for (int i = 0; i < this.maxWaren; i++) {
+            this.waren.add(this.createRandomWare(50F, 100));
         }
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < this.lieferantenCount; i++) {
+            this.lieferanten.add(new Lieferant("Zufalls Lieferant"));
+        }
+
+        for (int i = 0; i < this.bestellungCount; i++) {
             /*
              * Erstelle eine Bestellung mit einer zufälligen Anzahl an Waren
              * und einem zufälligen Lieferanten
              */
-            int warenCount = (int) (Math.random() * maxWaren);
-            Lieferant lieferant = lieferanten.get((int) (Math.random() * lieferantenCount));
+            int warenCount = (int) (Math.random() * this.maxWaren);
+            Lieferant lieferant = this.lieferanten.get((int) (Math.random() * this.lieferantenCount));
             Bestellung bestellung = new Bestellung((int) (Math.random() * 100000), DateUtils.getRandomDate(2022, 2025), lieferant);
 
             /* erstelle Waren und teile sie der Bestellung zu */
             for (int j = 0; j < warenCount; j++) {
-                Ware ware = new Ware(Math.round(Math.random() * 20 * 100) / 100F, (int) (Math.random() * 100), "coole Ware" + warenCount);
+                Ware ware = this.createRandomWare(40F, 100);
                 int bestellt = (int) (Math.random() * 50);
                 WarenBestellung wb = new WarenBestellung(ware, bestellung, bestellt, (int) (Math.round(Math.random() * bestellt)));
 
-                waren.add(ware);
-                warenBestellungen.add(wb);
+                this.waren.add(ware);
+                this.warenBestellungen.add(wb);
             }
 
             if (Math.random() > 0.5F) {
                 Rechnung rechnung = new Rechnung(bestellung, DateUtils.getRandomDate(2022, 2030), Math.random() > 0.5);
 
-                rechnungen.add(rechnung);
+                this.rechnungen.add(rechnung);
             }
 
-            bestellungen.add(bestellung);
+            this.bestellungen.add(bestellung);
         }
 
-
-        /* Einfügen in die Datenbank */
-        for (TestTable<?> test : this.testData) {
-            test.insert();
+        /* Erstelle Lieferanten die keine Bestellung haben */
+        for (int i = 0; i < Math.round(this.lieferantenCount * 0.5F); i++) {
+            this.lieferanten.add(new Lieferant("ohne Bestellung"));
         }
+    }
 
+    public void testSetGelieferteMenge() {
+        System.out.println("Test WarenBestellungTable setGelieferteMenge");
+        try {
+            for (WarenBestellung wb : this.warenBestellungen.testData) {
+                this.db.getWarenBestellungTable().setGelieferteMenge(wb, (int) (Math.random() * 1000));
+            }
+
+            this.readAndCompare();
+        } catch (SQLException e) {
+            System.out.println("Test not passed: SQLException occurred!");
+
+            e.printStackTrace();
+        }
+    }
+
+    public void testInsertion() {
+        System.out.println("Test insertion and read");
+
+        try {
+            /* Einfügen in die Datenbank */
+            for (TestTable<?> test : this.testTables) {
+                test.insert();
+            }
+
+            /*
+             * Testen, ob die ausgelesenen Daten aus der Datenbank
+             * den Objekten hier entsprechen
+             */
+            this.readAndCompare();
+        } catch (SQLException e) {
+            System.out.println("Test not passed: SQLException occurred!");
+
+            e.printStackTrace();
+        }
+    }
+
+    private void readAndCompare() throws SQLException {
         boolean passed = true;
-        for (TestTable<?> test : this.testData) {
-            Map<?,?> wrong = test.testEquality();
+        boolean empty = false;
+
+        for (TestTable<?> testTable : this.testTables) {
+            empty = empty || testTable.testData.isEmpty();
+
+            Map<?,?> wrong = testTable.testEquality();
 
             if (!wrong.isEmpty()) {
                 passed = false;
 
                 System.out.println("Data that is not equal:");
 
-                System.out.println("\n" + test.tableName + ":");
+                System.out.println("\n" + testTable.tableName + ":");
                 this.outputTestResult(wrong);
             }
         }
 
-        if (passed) System.out.println("Test passed");
+        if (empty) {
+            System.out.println("One or more of the test data is empty!!!!!");
+        }
+        else if (passed) {
+            System.out.println("Test passed");
+        }
+    }
+
+    private Ware createRandomWare(float maxStueckPreis, int maxStueckzahl) {
+        return new Ware(Math.round(Math.random() * maxStueckPreis * 100) / 100F,
+                (int) (Math.random() * maxStueckzahl), "coole Ware");
     }
 
     private void outputTestResult(Map<?,?> map) {
