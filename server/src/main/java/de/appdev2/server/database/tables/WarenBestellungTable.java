@@ -9,6 +9,7 @@ import main.java.de.appdev2.server.database.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,5 +66,21 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
         }
 
         return bestellungen;
+    }
+
+    public boolean setGelieferteMenge(WarenBestellung warenBestellung, int gelieferteMenge) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("UPDATE ware_bestellung SET gelieferte_menge = ?" +
+                                                       "WHERE warennummer = ? AND bestellnummer = ? AND lieferantennr = ?");
+
+        stmt.setInt(1, gelieferteMenge);
+        stmt.setInt(2, warenBestellung.getWare().getNr());
+        stmt.setInt(3, warenBestellung.getBestellung().getNr());
+        stmt.setInt(4, warenBestellung.getBestellung().getLieferant().getNr());
+
+        boolean update = stmt.executeUpdate() != 0;
+
+        if (update) warenBestellung.setGelieferteMenge(gelieferteMenge);
+
+        return update;
     }
 }
