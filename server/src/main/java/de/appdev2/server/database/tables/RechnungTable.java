@@ -43,6 +43,33 @@ public class RechnungTable extends EntityTable<Rechnung> {
 
         Bestellung bestellung = this.db.getBestellungTable().getBestellung(set.getInt("bestellnummer"), set.getInt("lieferantennr"));
 
+        return this.createRechnung(set, bestellung);
+    }
+
+    public Rechnung getRechnung(Bestellung bestellung) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("SELECT * FROM rechnung WHERE bestellnummer=?");
+        stmt.setInt(1, bestellung.getNr());
+
+        ResultSet set = stmt.executeQuery();
+
+        if (!set.next()) return null;
+
+        return this.createRechnung(set, bestellung);
+    }
+
+    private Rechnung createRechnung(ResultSet set, Bestellung bestellung) throws SQLException {
         return new Rechnung(set.getInt("nr"), bestellung, set.getDate("datum"), set.getBoolean("offen"));
+    }
+
+    public boolean setOffen(Rechnung rechnung, boolean offen) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("UPDATE rechnung SET offen=? WHERE nr=?");
+        stmt.setBoolean(1, offen);
+        stmt.setInt(2, rechnung.getNr());
+
+        boolean update = stmt.executeUpdate() != 0;
+
+        if (update) rechnung.setOffen(offen);
+
+        return update;
     }
 }

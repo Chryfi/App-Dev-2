@@ -42,4 +42,16 @@ public class WareTable extends EntityTable<Ware> {
         return new Ware(set.getInt("nr"), set.getFloat("stueckpreis"),
                 set.getInt("stueckzahl"), set.getString("bezeichnung"));
     }
+
+    public boolean updateStueckzahl(Ware ware, int stueckzahl) throws SQLException {
+        PreparedStatement stmt = this.db.prepare("UPDATE ware SET stueckzahl=? WHERE nr=?");
+        stmt.setInt(1, stueckzahl);
+        stmt.setInt(2, ware.getNr());
+
+        boolean update = stmt.executeUpdate() != 0;
+
+        if (update) ware.setStueckzahl(stueckzahl);
+
+        return update;
+    }
 }

@@ -1,20 +1,19 @@
 package main.java.de.appdev2.server.application;
 
 import main.java.de.appdev2.entities.Bestellung;
+import main.java.de.appdev2.entities.Rechnung;
+import main.java.de.appdev2.entities.Ware;
 import main.java.de.appdev2.entities.WarenBestellung;
 import main.java.de.appdev2.exceptions.DataBaseException;
 import main.java.de.appdev2.exceptions.IllegalInputException;
 import main.java.de.appdev2.server.database.Database;
-import main.java.de.appdev2.server.database.tables.WarenBestellungTable;
 import main.java.de.appdev2.service.IWarenEingang;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.*;
 
-//TODO WarenEingangs Prozess Status hier speichern damit Client nicht einfach eine andere Methode aufrufen kann und sofort Waren annimmt???
 public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEingang {
     private Database db;
 
@@ -41,7 +40,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
         Set<WarenBestellung> warenBestellungen;
 
         try {
-            warenBestellungen = db.getWarenBestellungTable().getWarenBestellungen(bestellung);
+            warenBestellungen = this.db.getWarenBestellungTable().getWarenBestellungen(bestellung);
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -73,15 +72,57 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
         return true;
     }
 
-    public void annahmeVerweigern(Set<WarenBestellung> warenBestellungen) throws SQLException{
+    public void annahmeVerweigern(Set<WarenBestellung> warenBestellungen) throws SQLException, DataBaseException {
         for (WarenBestellung entry : warenBestellungen) {
             entry.setGelieferteMenge(0);
-            this.db.getWarenBestellungTable().setGelieferteMenge(entry, 0);
+
+            if (!this.db.getWarenBestellungTable().setGelieferteMenge(entry, 0)) {
+                throw new DataBaseException("Datenbank hat die gelieferte Menge nicht gesetzt.");
+            }
         }
     }
 
     @Override
-    public void warenAnnahme(Map<WarenBestellung, Integer> stueckzahlen) throws RemoteException {
-        //TODO
+    public void warenAnnahme(Map<WarenBestellung, Integer> stueckzahlen) throws RemoteException, IllegalInputException, DataBaseException {
+        for (Map.Entry<WarenBestellung, Integer> entry : stueckzahlen.entrySet()) {
+            Integer geliefert = entry.getValue();
+            WarenBestellung wb = entry.getKey();
+
+            if (geliefert == null) {
+                throw new IllegalInputException("Gelieferte Menge kann nicht = \"null\" sein! Geben Sie 0 ein.");
+            }
+
+            try {
+                if (!this.db.getWarenBestellungTable().setGelieferteMenge(wb, geliefert)) {
+                    throw new DataBaseException("Die Datenbank hat die gelieferte Menge nicht aktualisiert.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseException("Die Datenbank hat eine Katze verschluckt und kann daher die gelieferte Menge nicht setzen!*MIAU*");
+            }
+
+            try {
+                /*
+                 * Zur Sicherheit wird aus der Datenbank die Stückzahl von der bereits existierenden Ware abgerufen,
+                 * falls der Client die Stückzahl im Objekt verändert hat.
+                 */
+                Ware ware = this.db.getWareTable().getWare(wb.getWare().getNr());
+
+                if (!this.db.getWareTable().updateStueckzahl(ware,ware.getStueckzahl() + geliefert)) {
+                    throw new DataBaseException("Die Datenbank hat die Waren Stückzahl nicht aktualisiert.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseException("Etwas ist schief gelaufen beim setzen der Waren Stückzahl!");
+            }
+
+            try {
+                Rechnung rechnung = this.db.getRechnungTable().getRechnung(wb.getBestellung());
+
+                if (!this.db.getRechnungTable().setOffen(rechnung, false)) {
+                    throw new DataBaseException("Die Datenbank hat die Rechnung nicht aktualisiert.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseException("Etwas ist beim Aktualisieren der Rechnung schiefgelaufen!");
+            }
+        }
     }
 }

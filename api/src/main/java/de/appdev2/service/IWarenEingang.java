@@ -16,7 +16,7 @@ import java.util.Set;
 public interface IWarenEingang extends Remote {
 
     /**
-     * Prüfe ob die Bestellung vom Lieferanten existiert
+     * Prüfe, ob die Bestellung vom Lieferanten existiert.
      * @param bestellNr
      * @param lieferantenNr
      * @return ein Set mit den Waren und Bestellungen der gesuchten Bestellnummer und Lieferantennummer.
@@ -27,8 +27,8 @@ public interface IWarenEingang extends Remote {
     Set<WarenBestellung> checkBestellung(int bestellNr, int lieferantenNr) throws RemoteException, DataBaseException;
 
     /**
-     * Prüfe ob die Qualitaet der gegebenen Waren ausreichend ist. Null Werte für Booleans sind hier nicht zulässig.
-     * @param qualitaet
+     * Prüfe ob die Qualität der gegebenen Waren ausreichend ist. Null Werte für Booleans sind hier nicht zulässig.
+     * @param qualitaet eine map mit den Waren Bestellungen und der jeweiligen Qualität: true = Qualität gut, false = Qualität schlecht.
      * @return true wenn die Qualitaet ausreichend ist und mit dem Wareneingangsprozess fortgefahren werden kann.
      *         Bei false wird die Annahme verweigert.
      * @throws RemoteException
@@ -39,9 +39,11 @@ public interface IWarenEingang extends Remote {
 
     /**
      * Nehme die Waren an und trage die gelieferten Stückzahlen ein.
-     * @param stueckzahlen
+     * @param stueckzahlen eine map mit den Waren Bestellungen und der jeweiligen tatsächlich gelieferten Stückzahl.
      * @throws RemoteException
+     * @throws IllegalInputException Falls eine Eingabe falsch ist z.B. "null" für Integer
+     * @throws DataBaseException Falls ein Fehler bei Datenbank Operationen auftritt.
      */
-    void warenAnnahme(Map<WarenBestellung, Integer> stueckzahlen) throws RemoteException;
+    void warenAnnahme(Map<WarenBestellung, Integer> stueckzahlen) throws RemoteException, IllegalInputException, DataBaseException;
 
 }

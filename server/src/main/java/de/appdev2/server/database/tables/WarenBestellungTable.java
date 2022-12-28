@@ -45,8 +45,7 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
         Ware ware = this.db.getWareTable().getWare(warenNr);
         Bestellung bestellung = this.db.getBestellungTable().getBestellung(bestellNr, lieferantennr);
 
-        return new WarenBestellung(ware, bestellung,
-                set.getInt("bestellte_menge"), set.getInt("gelieferte_menge"));
+        return this.createWarenBestellung(set, ware, bestellung);
     }
 
     public Set<WarenBestellung> getWarenBestellungen(Bestellung bestellung) throws SQLException {
@@ -61,11 +60,14 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
         while (set.next()) {
             Ware ware = this.db.getWareTable().getWare(set.getInt("warennummer"));
 
-            bestellungen.add(new WarenBestellung(ware, bestellung,
-                    set.getInt("bestellte_menge"), set.getInt("gelieferte_menge")));
+            bestellungen.add(this.createWarenBestellung(set, ware, bestellung));
         }
 
         return bestellungen;
+    }
+
+    private WarenBestellung createWarenBestellung(ResultSet set, Ware ware, Bestellung bestellung) throws SQLException {
+        return new WarenBestellung(ware, bestellung, set.getInt("bestellte_menge"), set.getInt("gelieferte_menge"));
     }
 
     public boolean setGelieferteMenge(WarenBestellung warenBestellung, int gelieferteMenge) throws SQLException {
