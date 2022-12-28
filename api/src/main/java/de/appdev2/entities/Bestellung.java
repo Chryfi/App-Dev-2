@@ -1,8 +1,9 @@
 package main.java.de.appdev2.entities;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Bestellung {
+public class Bestellung implements Serializable {
 
     private int nr;
     private Date lieferdatum;
@@ -18,10 +19,6 @@ public class Bestellung {
         return this.nr;
     }
 
-    public void setNr(int nr) {
-        this.nr = nr;
-    }
-
     public Date getLieferdatum() {
         return this.lieferdatum;
     }
@@ -32,10 +29,6 @@ public class Bestellung {
 
     public Lieferant getLieferant() {
         return this.lieferant;
-    }
-
-    public void setLieferant(Lieferant lieferant) {
-        this.lieferant = lieferant;
     }
 
     @Override

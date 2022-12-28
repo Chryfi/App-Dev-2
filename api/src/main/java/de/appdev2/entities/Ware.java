@@ -1,6 +1,8 @@
 package main.java.de.appdev2.entities;
 
-public class Ware {
+import java.io.Serializable;
+
+public class Ware implements Serializable {
 
     private int nr;
     private float stueckpreis;

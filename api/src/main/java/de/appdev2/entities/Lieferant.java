@@ -1,6 +1,8 @@
 package main.java.de.appdev2.entities;
 
-public class Lieferant{
+import java.io.Serializable;
+
+public class Lieferant implements Serializable {
 	
 	private int nr;
 	private String name;

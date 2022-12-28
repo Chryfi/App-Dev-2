@@ -1,8 +1,9 @@
 package main.java.de.appdev2.entities;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Rechnung {
+public class Rechnung implements Serializable {
 
     private Bestellung bestellung;
     private int nr;

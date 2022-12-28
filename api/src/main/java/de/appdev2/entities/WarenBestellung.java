@@ -1,6 +1,8 @@
 package main.java.de.appdev2.entities;
 
-public class WarenBestellung {
+import java.io.Serializable;
+
+public class WarenBestellung implements Serializable {
 
     private Bestellung bestellung;
     private Ware ware;
