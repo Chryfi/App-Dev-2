@@ -1,24 +1,31 @@
 package main.java.de.appdev2.server;
 
+import main.java.de.appdev2.entities.*;
+import main.java.de.appdev2.server.application.WarenEingangImpl;
 import main.java.de.appdev2.server.database.Database;
-import main.java.de.appdev2.server.database.TestDatabase;
 
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         Database db = new Database("AppDevDB", "localhost:5432", "postgresql");
 
-        db.connect("appdev", "appdevpassword");
+        try {
+            db.connect("appdev", "appdevpassword");
+        } catch (SQLException e) {
+            System.out.println("Konnte nicht zur Datenbank verbinden!");
 
-        TestDatabase testDatabase = new TestDatabase(db);
+            e.printStackTrace();
+        }
 
-        testDatabase.generateRandomData();
-        testDatabase.testInsertion();
-        testDatabase.testSetGelieferteMenge();
+        try {
+            Server warenKatze = new Server("localhost", 1239, "katze", new WarenEingangImpl(db));
 
-        /*Rechnung rechnung = db.getRechnungTable().getRechnung(2);
-
-        System.out.println(rechnung);*/
+            warenKatze.host();
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }
