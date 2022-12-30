@@ -1,8 +1,8 @@
-package main.java.de.appdev2.server.database;
+package main.java.de.appdev2.server.testing;
 
 import main.java.de.appdev2.entities.*;
+import main.java.de.appdev2.server.database.Database;
 import main.java.de.appdev2.server.database.tables.EntityTable;
-import main.java.de.appdev2.utils.DateUtils;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -74,9 +74,10 @@ public class TestDatabase {
     public void generateRandomData() {
         /* Waren erstellen die keiner Bestellung angehören */
         for (int i = 0; i < this.maxWaren; i++) {
-            this.waren.add(this.createRandomWare(50F, 100));
+            this.waren.add(DataGenerator.getWare(10F, 50F, 500));
         }
 
+        /* Lieferanten erstellen die später eine zufällige Bestellung erhalten können */
         for (int i = 0; i < this.lieferantenCount; i++) {
             this.lieferanten.add(new Lieferant("Zufalls Lieferant"));
         }
@@ -86,22 +87,17 @@ public class TestDatabase {
              * Erstelle eine Bestellung mit einer zufälligen Anzahl an Waren
              * und einem zufälligen Lieferanten
              */
-            int warenCount = (int) (Math.random() * this.maxWaren);
             Lieferant lieferant = this.lieferanten.get((int) (Math.random() * this.lieferantenCount));
-            Bestellung bestellung = new Bestellung((int) (Math.random() * 100000), DateUtils.getRandomDate(2022, 2025), lieferant);
+            Bestellung bestellung = DataGenerator.getBestellung(lieferant, 2022, 2025);
 
-            /* erstelle Waren und teile sie der Bestellung zu */
-            for (int j = 0; j < warenCount; j++) {
-                Ware ware = this.createRandomWare(40F, 100);
-                int bestellt = (int) (Math.random() * 50);
-                WarenBestellung wb = new WarenBestellung(ware, bestellung, bestellt, (int) (Math.round(Math.random() * bestellt)));
+            Set<Ware> bestellteWaren = DataGenerator.getWaren(1, this.maxWaren, 2F, 40F, 100);
+            Set<WarenBestellung> wbs = DataGenerator.getWarenBestellungen(bestellung, bestellteWaren, 0, 50, 0, 50);
 
-                this.waren.add(ware);
-                this.warenBestellungen.add(wb);
-            }
+            this.waren.testData.addAll(bestellteWaren);
+            this.warenBestellungen.testData.addAll(wbs);
 
             if (Math.random() > 0.5F) {
-                Rechnung rechnung = new Rechnung(bestellung, DateUtils.getRandomDate(2022, 2030), Math.random() > 0.5);
+                Rechnung rechnung = DataGenerator.getRechnung(bestellung, 2022, 2030, Math.random() > 0.5);
 
                 this.rechnungen.add(rechnung);
             }
@@ -117,9 +113,85 @@ public class TestDatabase {
 
     public void testSetGelieferteMenge() {
         System.out.println("Test WarenBestellungTable setGelieferteMenge");
+
         try {
             for (WarenBestellung wb : this.warenBestellungen.testData) {
-                this.db.getWarenBestellungTable().setGelieferteMenge(wb, (int) (Math.random() * 1000));
+                if (!this.db.getWarenBestellungTable().setGelieferteMenge(wb, (int) (Math.random() * 1000))) {
+                    System.out.println("WarenBestellung ware=" + wb.getWare().getNr()
+                            + ", bestellungnr=" + wb.getBestellung().getNr()
+                            + ", lieferantennr=" + wb.getBestellung().getLieferant().getNr() + " konnte nicht geupdated werden.");
+                }
+            }
+
+            this.readAndCompare();
+        } catch (SQLException e) {
+            System.out.println("Test not passed: SQLException occurred!");
+
+            e.printStackTrace();
+        }
+    }
+
+    public void testWareUpdateStueckzahl() {
+        System.out.println("Test WarenTable updateStueckzahl");
+
+        try {
+            for (Ware ware : this.waren.testData) {
+                if (!this.db.getWareTable().updateStueckzahl(ware, (int) (Math.random() * 1000))) {
+                    System.out.println("ware " + ware.getNr() + " konnte nicht geupdated werden.");
+                }
+            }
+
+            this.readAndCompare();
+        } catch (SQLException e) {
+            System.out.println("Test not passed: SQLException occurred!");
+
+            e.printStackTrace();
+        }
+    }
+
+    public void testGetWarenBestellungen() {
+        System.out.println("Test getWarenBestellungen from Bestellung");
+
+        try {
+            boolean passed = true;
+
+            for (Bestellung bestellung : this.bestellungen.testData) {
+                Set<WarenBestellung> wbSet = this.db.getWarenBestellungTable().getWarenBestellungen(bestellung);
+
+                int equaled = 0;
+                for (WarenBestellung wb : this.warenBestellungen.testData) {
+                    for (WarenBestellung wbDB : wbSet) {
+                        if (wbDB.equals(wb)) {
+                            equaled++;
+                            break;
+                        }
+                    }
+                }
+
+                if (wbSet.size() != equaled) {
+                    System.out.println("Test not passed: " + equaled + " are equal while " + wbSet.size() + " were read from databse.");
+                    passed = false;
+                }
+            }
+
+            if (passed) {
+                System.out.println("Test passed");
+            }
+        } catch (SQLException e) {
+            System.out.println("Test not passed: SQLException occurred!");
+
+            e.printStackTrace();
+        }
+    }
+
+    public void testRechnungSetOffen() {
+        System.out.println("Test RechnungTable setOffen");
+
+        try {
+            for (Rechnung rechnung : this.rechnungen.testData) {
+                if (!this.db.getRechnungTable().setOffen(rechnung, Math.random() > 0.5)) {
+                    System.out.println("rechnung " + rechnung.getNr() + " konnte nicht geupdated werden.");
+                }
             }
 
             this.readAndCompare();
@@ -178,11 +250,6 @@ public class TestDatabase {
         }
     }
 
-    private Ware createRandomWare(float maxStueckPreis, int maxStueckzahl) {
-        return new Ware(Math.round(Math.random() * maxStueckPreis * 100) / 100F,
-                (int) (Math.random() * maxStueckzahl), "coole Ware");
-    }
-
     private void outputTestResult(Map<?,?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             System.out.println("Test data that was inserted: " + entry.getKey());
@@ -219,7 +286,7 @@ public class TestDatabase {
         public Map<T, T> testEquality() throws SQLException {
             Map<T, T> notEqual = new HashMap<>();
 
-            for (T test : testData) {
+            for (T test : this.testData) {
                 T fromDB = this.retrieve.execute(test);
 
                 if (!test.equals(fromDB)) {
