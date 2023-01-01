@@ -9,6 +9,8 @@ import java.util.*;
 
 /**
  * Eine Klasse die zufallsgenerierte Daten testet.
+ *
+ * @author Christian Fritz
  */
 public class TestDatabase {
     private final Database db;
