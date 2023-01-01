@@ -29,7 +29,6 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
             bestellung = this.db.getBestellungTable().getBestellung(bestellNr, lieferantenNr);
         } catch (SQLException e) {
             e.printStackTrace();
-
             throw new DataBaseException("Etwas ist schiefgelaufen beim Abfragen der Bestellung!");
         }
 
@@ -43,8 +42,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
             warenBestellungen = this.db.getWarenBestellungTable().getWarenBestellungen(bestellung);
         } catch (SQLException e) {
             e.printStackTrace();
-
-            throw new DataBaseException("Etwas ist schiefgelaufen beim Abfragen der Waren Beziehungen!");
+            throw new DataBaseException("Etwas ist beim Abfragen der Waren Beziehungen schiefgelaufen!");
         }
 
         return warenBestellungen;
@@ -62,7 +60,8 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                 try {
                     this.annahmeVerweigern(qualitaet.keySet());
                 } catch (SQLException e) {
-                    throw new DataBaseException("Heute fühlt sich die Datenbank als Katze und nicht als Datenbank, deshalb geht nicht!");
+                    e.printStackTrace();
+                    throw new DataBaseException("Etwas ist beim Verweigern in der Datenbank schiefgelaufen!");
                 }
 
                 return false;
@@ -97,7 +96,8 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                     throw new DataBaseException("Die Datenbank hat die gelieferte Menge nicht aktualisiert.");
                 }
             } catch (SQLException e) {
-                throw new DataBaseException("Die Datenbank hat eine Katze verschluckt und kann daher die gelieferte Menge nicht setzen!*MIAU*");
+                e.printStackTrace();
+                throw new DataBaseException("Etwas ist beim setzen der gelieferten Menge schiefgelaufen.");
             }
 
             try {
@@ -111,7 +111,8 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                     throw new DataBaseException("Die Datenbank hat die Waren Stückzahl nicht aktualisiert.");
                 }
             } catch (SQLException e) {
-                throw new DataBaseException("Etwas ist schief gelaufen beim setzen der Waren Stückzahl!");
+                e.printStackTrace();
+                throw new DataBaseException("Etwas ist beim setzen der Waren Stückzahl schiefgelaufen!");
             }
 
             try {
@@ -121,6 +122,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                     throw new DataBaseException("Die Datenbank hat die Rechnung nicht aktualisiert.");
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
                 throw new DataBaseException("Etwas ist beim Aktualisieren der Rechnung schiefgelaufen!");
             }
         }

@@ -1,8 +1,8 @@
 package main.java.de.appdev2.server;
 
-import main.java.de.appdev2.entities.*;
 import main.java.de.appdev2.server.application.WarenEingangImpl;
 import main.java.de.appdev2.server.database.Database;
+import main.java.de.appdev2.server.testing.TestDatabase;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -17,10 +17,12 @@ public class Main {
             System.out.println("Konnte nicht zur Datenbank verbinden!");
 
             e.printStackTrace();
+
+            return;
         }
 
         try {
-            Server warenKatze = new Server("localhost", 1239, "katze", new WarenEingangImpl(db));
+            Server<WarenEingangImpl> warenKatze = new Server<>("localhost", 1239, "katze", new WarenEingangImpl(db));
 
             warenKatze.host();
         }

@@ -48,8 +48,7 @@ public class Client<T extends Remote> {
 
             return false;
         } catch (ClassCastException e) {
-            System.out.println("Die Klasse konnte nicht gecastet werden!!!!!!! KATZE SAUER!");
-
+            System.out.println("Die Klasse konnte nicht gecastet werden.");
             e.printStackTrace();
 
             return false;
