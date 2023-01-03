@@ -16,7 +16,7 @@ public class Main  {
             return;
         }
 
-        WarenEingangDialogue warenEingangDialogue = new WarenEingangDialogue(service, true);
+        WarenEingangDialogue warenEingangDialogue = new WarenEingangDialogue(service);
         warenEingangDialogue.run();
     }
 }

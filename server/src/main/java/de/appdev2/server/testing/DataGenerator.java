@@ -42,7 +42,7 @@ public class DataGenerator {
     }
 
     public static Ware getWare(float minStueckPreis, float maxStueckPreis, int maxStueckzahl) {
-        return new Ware(Math.round(MathUtils.randomRange(minStueckPreis, maxStueckPreis) * 100) / 100F,
+        return new Ware(MathUtils.round((float) MathUtils.randomRange(minStueckPreis, maxStueckPreis), 2),
                 (int) (Math.random() * maxStueckzahl), "coole Ware");
     }
 

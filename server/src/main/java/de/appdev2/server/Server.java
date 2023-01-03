@@ -13,10 +13,10 @@ public class Server<T extends Remote> {
     private final String address;
     private final T remoteObject;
 
-    public Server(String address, int port, String name, T skeleton){
+    public Server(String address, int port, String name, T remoteObject){
         this.port = port;
         this.name = name;
-        this.remoteObject = skeleton;
+        this.remoteObject = remoteObject;
         this.address = address;
     }
 
