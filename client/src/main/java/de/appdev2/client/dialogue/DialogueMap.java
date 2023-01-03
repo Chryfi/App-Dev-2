@@ -20,6 +20,13 @@ public class DialogueMap<K, V> extends Dialogue<K, Map<K, V>> {
         this.valueDialogue = valueDialogue;
     }
 
+    public DialogueMap(Function<K, String> prompt, Set<K> keys, Dialogue<K, V> valueDialogue) {
+        super(prompt, (obj) -> "");
+
+        this.keys = keys;
+        this.valueDialogue = valueDialogue;
+    }
+
     public void setKeys(Set<K> keys) {
         this.keys = keys;
     }
