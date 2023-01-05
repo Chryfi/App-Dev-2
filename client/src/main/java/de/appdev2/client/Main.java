@@ -10,12 +10,14 @@ public class Main  {
 
         IWarenEingang service;
 
+        /* stellt Verbindung mit Server her */
         if (!warenEingang.connectToServer() || (service = warenEingang.getStub()) == null) {
             System.out.println("Service konnte nicht verbinden!");
 
             return;
         }
 
+        /* startet die Nutzereingaben */
         WarenEingangDialogue warenEingangDialogue = new WarenEingangDialogue(service);
         warenEingangDialogue.run();
     }

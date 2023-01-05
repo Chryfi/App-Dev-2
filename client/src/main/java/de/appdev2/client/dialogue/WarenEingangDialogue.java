@@ -12,12 +12,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Klasse, die die Nutzereingaben und Ausgaben für den Wareneingangsprozess implementiert.
+ */
 public class WarenEingangDialogue {
     private IWarenEingang service;
     private DialogueInteger<?> bestellungInput;
     private DialogueInteger<?> lieferantInput;
     private DialogueMap<WarenBestellung, Boolean> qualityInput;
     private DialogueMap<WarenBestellung, Integer> stueckzahl;
+    /**
+     * Legt fest, ob der ganze Stacktrace einer Exception ausgegeben werden soll oder nur die Nachricht.
+     */
     private boolean debug;
 
     public WarenEingangDialogue(IWarenEingang service) {
@@ -49,11 +55,13 @@ public class WarenEingangDialogue {
         this.stueckzahl = new DialogueMap<>("Geben Sie die Stückzahlen für die Waren ein.", stueckzahlInput);
     }
 
+    /**
+     * Startet den Ablauf.
+     */
     public void run() {
         Set<WarenBestellung> warenBestellungen;
         boolean qualityCheck;
         Map<WarenBestellung, Integer> stueckzahl;
-
         String line = (new String(new char[50])).replace('\0', '―');
 
         /*
@@ -128,6 +136,8 @@ public class WarenEingangDialogue {
 
         System.out.println(line);
 
+        /* Gebe den Preis und die Annahme-Art aus */
+
         float preisSus = 0;
         boolean teilAnnahme = false;
         for (Map.Entry<WarenBestellung, Integer> geliefert : stueckzahl.entrySet()) {
@@ -153,6 +163,10 @@ public class WarenEingangDialogue {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     private void outputDatabaseException(DataBaseException e) {
         System.out.println("Ein Datenbank Fehler ist aufgetreten");
         this.printException(e);

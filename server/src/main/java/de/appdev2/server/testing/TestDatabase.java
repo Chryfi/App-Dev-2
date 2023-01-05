@@ -1,8 +1,8 @@
 package main.java.de.appdev2.server.testing;
 
 import main.java.de.appdev2.entities.*;
-import main.java.de.appdev2.server.database.Database;
-import main.java.de.appdev2.server.database.tables.EntityTable;
+import main.java.de.appdev2.server.datalayer.Database;
+import main.java.de.appdev2.server.datalayer.tables.EntityTable;
 
 import java.sql.SQLException;
 import java.util.*;

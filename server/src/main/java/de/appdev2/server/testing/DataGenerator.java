@@ -7,6 +7,9 @@ import main.java.de.appdev2.utils.MathUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Eine Utility Klasse mit Methoden um zufallsbasierte Daten zu generieren.
+ */
 public class DataGenerator {
     public static Set<WarenBestellung> getWarenBestellungen(Bestellung bestellung, Set<Ware> waren,
                                                             int minBestellt, int maxBestellt,

@@ -6,7 +6,7 @@ import main.java.de.appdev2.entities.Ware;
 import main.java.de.appdev2.entities.WarenBestellung;
 import main.java.de.appdev2.exceptions.DataBaseException;
 import main.java.de.appdev2.exceptions.IllegalInputException;
-import main.java.de.appdev2.server.database.Database;
+import main.java.de.appdev2.server.datalayer.Database;
 import main.java.de.appdev2.service.IWarenEingang;
 
 import java.rmi.RemoteException;
@@ -14,6 +14,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Die konkrete Implementation des Wareneingangs Prozesses.
+ */
 public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEingang {
     private Database db;
 
@@ -25,6 +28,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
     public Set<WarenBestellung> checkBestellung(int bestellNr, int lieferantenNr) throws RemoteException, DataBaseException {
         Bestellung bestellung;
 
+        /* suche nach der Bestellung */
         try {
             bestellung = this.db.getBestellungTable().getBestellung(bestellNr, lieferantenNr);
         } catch (SQLException e) {
@@ -36,6 +40,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
             return null;
         }
 
+        /* suche nach den WarenBestellungen der Bestellung */
         Set<WarenBestellung> warenBestellungen;
 
         try {
@@ -71,10 +76,14 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
         return true;
     }
 
+    /**
+     * Verweigert die Annahme und setzt die gelieferten Mengen auf 0.
+     * @param warenBestellungen
+     * @throws SQLException
+     * @throws DataBaseException
+     */
     public void annahmeVerweigern(Set<WarenBestellung> warenBestellungen) throws SQLException, DataBaseException {
         for (WarenBestellung entry : warenBestellungen) {
-            entry.setGelieferteMenge(0);
-
             if (!this.db.getWarenBestellungTable().setGelieferteMenge(entry, 0)) {
                 throw new DataBaseException("Datenbank hat die gelieferte Menge nicht gesetzt.");
             }
@@ -91,6 +100,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                 throw new IllegalInputException("Gelieferte Menge kann nicht = \"null\" sein! Geben Sie 0 ein.");
             }
 
+            /* setze die gelieferte Menge */
             try {
                 if (!this.db.getWarenBestellungTable().setGelieferteMenge(wb, geliefert)) {
                     throw new DataBaseException("Die Datenbank hat die gelieferte Menge nicht aktualisiert.");
@@ -100,6 +110,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                 throw new DataBaseException("Etwas ist beim setzen der gelieferten Menge schiefgelaufen.");
             }
 
+            /* setze die Waren Stückzahl */
             try {
                 /*
                  * Zur Sicherheit wird aus der Datenbank die Stückzahl von der bereits existierenden Ware abgerufen,
@@ -115,6 +126,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                 throw new DataBaseException("Etwas ist beim setzen der Waren Stückzahl schiefgelaufen!");
             }
 
+            /* setze Rechnung offen auf false */
             try {
                 Rechnung rechnung = this.db.getRechnungTable().getRechnung(wb.getBestellung());
 
