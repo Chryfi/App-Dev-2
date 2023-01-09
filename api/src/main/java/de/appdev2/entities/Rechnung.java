@@ -3,6 +3,9 @@ package main.java.de.appdev2.entities;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * Repräsentiert die Datenbank Entität Rechnung
+ */
 public class Rechnung implements Serializable {
 
     private Bestellung bestellung;
@@ -70,6 +73,6 @@ public class Rechnung implements Serializable {
     @Override
     public String toString() {
         return "Rechnung[nr = " + this.nr + ", datum = " + this.datum
-                + ", offen = " + this.offen + ", bestellung = " + this.bestellung +"]";
+                + ", offen = " + this.offen + ", bestellung = " + this.bestellung + "]";
     }
 }

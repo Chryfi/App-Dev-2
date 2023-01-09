@@ -3,6 +3,9 @@ package main.java.de.appdev2.entities;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * Repräsentiert die Datenbank Entität Bestellung
+ */
 public class Bestellung implements Serializable {
 
     private int nr;
@@ -33,7 +36,7 @@ public class Bestellung implements Serializable {
 
     @Override
     public String toString() {
-        return "Bestellung[nr = " + this.nr + ", lieferdatum = " + this.lieferdatum + ", lieferant = " + this.lieferant +"]";
+        return "Bestellung[nr = " + this.nr + ", lieferdatum = " + this.lieferdatum + ", lieferant = " + this.lieferant + "]";
     }
 
     @Override

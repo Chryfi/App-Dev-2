@@ -2,6 +2,9 @@ package main.java.de.appdev2.entities;
 
 import java.io.Serializable;
 
+/**
+ * Repräsentiert die Datenbank Entität Ware
+ */
 public class Ware implements Serializable {
 
     private int nr;

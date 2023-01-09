@@ -26,6 +26,7 @@ public abstract class EntityTable<T> {
 
     /**
      * Füge die Entität in die Datenbank Tabelle ein.
+     *
      * @param entity repräsentiert den Entitätstypen, der bei der Erstellung des Datenmodells identifiziert wurde
      * @return true, falls es funktioniert hat. False, wenn nichts geändert wurde.
      * @throws SQLException falls ein Fehler bei den Datenbankoperationen aufgetreten ist.

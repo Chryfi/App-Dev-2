@@ -5,6 +5,12 @@ import main.java.de.appdev2.exceptions.IllegalInputException;
 import java.util.Scanner;
 import java.util.function.Function;
 
+/**
+ * Eine Dialog-Klasse die einen Integer basierend auf der Nutzereingabe zurückgibt.
+ *
+ * @param <K> Datentyp für das Objekt für welches der Input geschehen soll.
+ *            Das Objekt wird für eine individuelle Ausgabe benutzt.
+ */
 public class DialogueInteger<K> extends Dialogue<K, Integer> {
     private int min = Integer.MIN_VALUE;
     private int max = Integer.MAX_VALUE;
@@ -42,6 +48,14 @@ public class DialogueInteger<K> extends Dialogue<K, Integer> {
         return this.max;
     }
 
+    /**
+     * Eingabe des Nutzers in Integer konvertieren.
+     *
+     * @param obj das Objekt für welches die Eingabe geschehen soll.
+     *            Es wird benutzt für die Ausgabe der Anweisung und die Benachrichtigung bei einer falschen Eingabe.
+     *            Darf auch null sein.
+     * @return ein Integer, falls die Eingabe korrekt war z.B. innerhalb des Definitionsbereichs.
+     */
     @Override
     public Integer input(K obj) {
         Scanner scanner = new Scanner(System.in);
@@ -64,6 +78,14 @@ public class DialogueInteger<K> extends Dialogue<K, Integer> {
         return eingabe;
     }
 
+    /**
+     * Konvertiere den String in einen Integer, falls der String im richtigen Format ist.
+     *
+     * @param scan
+     * @return Integer konvertiert aus dem String.
+     * @throws IllegalInputException falls der String nicht als ganze Zahl gelesen werden konnte,
+     *                               oder er außerhalb des Definitionsbereichs ist (siehe {@link #min} und {@link #max})
+     */
     private Integer format(String scan) throws IllegalInputException {
         Integer eingabe;
 

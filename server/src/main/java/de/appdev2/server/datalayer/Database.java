@@ -82,7 +82,7 @@ public class Database {
      * Verbindet zu der Datenbank, mit der vorher definierten Adresse und dem angegebenen User und Passwort.
      * Falls eine Verbindung vorher existierte, wird diese getrennt.
      *
-     * @param user legt den Nutzer der Datenbank fest
+     * @param user     legt den Nutzer der Datenbank fest
      * @param password legt das entsprechende Passwort zum User fest
      * @throws SQLException kann geworfen werden, wenn die Verbindung getrennt {@link #disconnect()} wird (falls bereits verbunden),
      *                      oder wenn eine Verbindung zur Datenbank mittels {@link DriverManager#getConnection(String, String, String)} hergestellt wird.
@@ -120,6 +120,7 @@ public class Database {
     /**
      * Erstelle ein {@link PreparedStatement} basierend auf der angegebenen query.
      * Falls die Datenbank nicht verbunden ist, wird versucht die Verbindung wiederherzustellen.
+     *
      * @param query
      * @return ein {@link PreparedStatement} mit der definierten query.
      * @throws SQLException falls ein Fehler beim Aufbau/Wiederverbinden mit der Datenbank auftritt oder ein Fehler beim

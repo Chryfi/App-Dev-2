@@ -2,6 +2,9 @@ package main.java.de.appdev2.entities;
 
 import java.io.Serializable;
 
+/**
+ * Repräsentiert die Datenbank Beziehung WarenBestellung
+ */
 public class WarenBestellung implements Serializable {
 
     private Bestellung bestellung;
@@ -9,7 +12,7 @@ public class WarenBestellung implements Serializable {
     private int bestellteMenge;
     private int gelieferteMenge;
 
-    public WarenBestellung(Ware ware, Bestellung bestellung, int bestellteMenge, int gelieferteMenge){
+    public WarenBestellung(Ware ware, Bestellung bestellung, int bestellteMenge, int gelieferteMenge) {
         this.bestellteMenge = bestellteMenge;
         this.gelieferteMenge = gelieferteMenge;
         this.ware = ware;
@@ -32,7 +35,7 @@ public class WarenBestellung implements Serializable {
         this.ware = ware;
     }
 
-    public int getBestellteMenge(){
+    public int getBestellteMenge() {
         return this.bestellteMenge;
     }
 
@@ -40,7 +43,7 @@ public class WarenBestellung implements Serializable {
         this.bestellteMenge = bestellteMenge;
     }
 
-    public int getGelieferteMenge(){
+    public int getGelieferteMenge() {
         return this.gelieferteMenge;
     }
 
@@ -51,7 +54,7 @@ public class WarenBestellung implements Serializable {
     @Override
     public String toString() {
         return "WarenBestellung[bestellung = " + this.bestellung + ", ware = " + this.ware
-                + ", bestellteMenge = " + this.bestellteMenge + ", gelieferteMenge = " + this.gelieferteMenge +"]";
+                + ", bestellteMenge = " + this.bestellteMenge + ", gelieferteMenge = " + this.gelieferteMenge + "]";
     }
 
     @Override

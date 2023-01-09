@@ -45,7 +45,7 @@ public class TestDatabase {
         this.maxWaren = maxWaren;
         this.lieferantenCount = lieferantenCount;
 
-        this.lieferanten = new TestTable<>("Lieferanten" , this.db.getLieferantTable(), (lieferant) -> {
+        this.lieferanten = new TestTable<>("Lieferanten", this.db.getLieferantTable(), (lieferant) -> {
             return this.db.getLieferantTable().getLieferant(lieferant.getNr());
         });
 
@@ -232,7 +232,7 @@ public class TestDatabase {
         for (TestTable<?> testTable : this.testTables) {
             empty = empty || testTable.testData.isEmpty();
 
-            Map<?,?> wrong = testTable.testEquality();
+            Map<?, ?> wrong = testTable.testEquality();
 
             if (!wrong.isEmpty()) {
                 passed = false;
@@ -246,13 +246,12 @@ public class TestDatabase {
 
         if (empty) {
             System.out.println("One or more of the test data is empty!!!!!");
-        }
-        else if (passed) {
+        } else if (passed) {
             System.out.println("Test passed");
         }
     }
 
-    private void outputTestResult(Map<?,?> map) {
+    private void outputTestResult(Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             System.out.println("Test data that was inserted: " + entry.getKey());
             System.out.println("Data from database:          " + entry.getValue() + "\n");

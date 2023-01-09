@@ -26,8 +26,7 @@ public class Main {
             Server<WarenEingangImpl> warenKatze = new Server<>("localhost", 1239, "katze", new WarenEingangImpl(db));
 
             warenKatze.host();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             e.printStackTrace();
         }
     }

@@ -88,9 +88,9 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
     /**
      * Dient der Erstellung eines WarenBestellung-Objekts.
      *
-     * @param set die Daten aus der Datenbank.
+     * @param set        die Daten aus der Datenbank.
      * @param bestellung gibt die Bestellung an, die die Ware bestellt hat.
-     * @param ware gibt die Ware an, die bestellt wurde.
+     * @param ware       gibt die Ware an, die bestellt wurde.
      * @return aus den Daten der Datenbank wird eine WarenBestellung erzeugt.
      * @throws SQLException falls ein Fehler bei den Datenbankoperationen aufgetreten ist.
      */
@@ -105,13 +105,13 @@ public class WarenBestellungTable extends EntityTable<WarenBestellung> {
      * den Stand der Datenbank widerspiegeln.
      *
      * @param warenBestellung
-     * @return true, wenn das Update durchgeführt werden konnte.
      * @param gelieferteMenge
+     * @return true, wenn das Update durchgeführt werden konnte.
      * @throws SQLException falls ein Fehler bei den Datenbankoperationen aufgetreten ist.
      */
     public boolean setGelieferteMenge(WarenBestellung warenBestellung, int gelieferteMenge) throws SQLException {
         PreparedStatement stmt = this.db.prepare("UPDATE ware_bestellung SET gelieferte_menge = ?" +
-                                                       "WHERE warennummer = ? AND bestellnummer = ? AND lieferantennr = ?");
+                "WHERE warennummer = ? AND bestellnummer = ? AND lieferantennr = ?");
         stmt.setInt(1, gelieferteMenge);
         stmt.setInt(2, warenBestellung.getWare().getNr());
         stmt.setInt(3, warenBestellung.getBestellung().getNr());

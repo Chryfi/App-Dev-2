@@ -21,7 +21,7 @@ public interface IWarenEingang extends Remote {
      * @param bestellNr
      * @param lieferantenNr
      * @return ein Set mit den WarenBestellungen der gesuchten Bestellnummer und Lieferantennummer.
-     *         Wenn keine Bestellung existiert, wird null zurückgegeben.
+     * Wenn keine Bestellung existiert, wird null zurückgegeben.
      * @throws RemoteException
      * @throws DataBaseException Falls ein Fehler bei Datenbankoperationen auftritt.
      */
@@ -33,10 +33,10 @@ public interface IWarenEingang extends Remote {
      * @param qualitaet eine Map mit den WarenBestellungen und der jeweiligen Qualität:
      *                  true = Qualität ist gut, false = Qualität ist schlecht.
      * @return true, wenn die Qualität ausreichend ist und mit dem Wareneingangsprozess fortgefahren werden kann.
-     *         Bei false wird die Annahme verweigert.
+     * Bei false wird die Annahme verweigert.
      * @throws RemoteException
      * @throws IllegalInputException Falls eine Eingabe falsch ist, z.B. null für Boolean.
-     * @throws DataBaseException Falls ein Fehler bei Datenbankoperationen auftritt.
+     * @throws DataBaseException     Falls ein Fehler bei Datenbankoperationen auftritt.
      */
     boolean checkQualitaet(Map<WarenBestellung, Boolean> qualitaet) throws RemoteException, IllegalInputException, DataBaseException;
 
@@ -47,7 +47,7 @@ public interface IWarenEingang extends Remote {
      * @param stueckzahlen eine Map mit den WarenBestellungen und der jeweiligen tatsächlich gelieferten Stückzahl.
      * @throws RemoteException
      * @throws IllegalInputException Falls eine Eingabe falsch ist z.B. "null" für Integer
-     * @throws DataBaseException Falls ein Fehler bei Datenbankoperationen auftritt.
+     * @throws DataBaseException     Falls ein Fehler bei Datenbankoperationen auftritt.
      */
     void warenAnnahme(Map<WarenBestellung, Integer> stueckzahlen) throws RemoteException, IllegalInputException, DataBaseException;
 

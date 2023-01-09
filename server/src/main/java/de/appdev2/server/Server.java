@@ -43,6 +43,7 @@ public class Server<T extends Remote> {
 
     /**
      * Hostet das remoteObject unter der vorher definierten Adresse.
+     *
      * @return true, wenn es keine Exceptions beim hosten gab.
      */
     public boolean host() {

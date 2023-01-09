@@ -78,6 +78,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
 
     /**
      * Verweigert die Annahme und setzt die gelieferten Mengen auf 0.
+     *
      * @param warenBestellungen
      * @throws SQLException
      * @throws DataBaseException
@@ -118,7 +119,7 @@ public class WarenEingangImpl extends UnicastRemoteObject implements IWarenEinga
                  */
                 Ware ware = this.db.getWareTable().getWare(wb.getWare().getNr());
 
-                if (!this.db.getWareTable().updateStueckzahl(ware,ware.getStueckzahl() + geliefert)) {
+                if (!this.db.getWareTable().updateStueckzahl(ware, ware.getStueckzahl() + geliefert)) {
                     throw new DataBaseException("Die Datenbank hat die Waren Stückzahl nicht aktualisiert.");
                 }
             } catch (SQLException e) {

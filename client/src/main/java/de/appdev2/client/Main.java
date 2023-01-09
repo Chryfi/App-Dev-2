@@ -4,7 +4,7 @@ import main.java.de.appdev2.client.dialogue.WarenEingangDialogue;
 
 import main.java.de.appdev2.service.IWarenEingang;
 
-public class Main  {
+public class Main {
     public static void main(String[] args) {
         Client<IWarenEingang> warenEingang = new Client<>("localhost", 1239, "katze");
 

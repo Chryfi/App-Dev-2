@@ -88,7 +88,7 @@ public class RechnungTable extends EntityTable<Rechnung> {
     /**
      * Dient der Erstellung einer Rechnung.
      *
-     * @param set die Daten aus der Datenbank.
+     * @param set        die Daten aus der Datenbank.
      * @param bestellung gibt die Bestellung an, zu der eine Rechnung erstellt werden soll.
      * @return aus den Daten der Datenbank wird eine neue Rechnung erstellt.
      * @throws SQLException falls ein Fehler bei den Datenbankoperationen aufgetreten ist.

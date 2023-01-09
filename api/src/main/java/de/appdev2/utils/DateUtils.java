@@ -3,6 +3,9 @@ package main.java.de.appdev2.utils;
 import java.sql.Date;
 import java.time.LocalDate;
 
+/**
+ * Eine Utility Klasse für die Date-Klasse.
+ */
 public class DateUtils {
 
     /**

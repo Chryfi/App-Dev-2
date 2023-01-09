@@ -17,10 +17,13 @@ import java.util.Set;
  */
 public class WarenEingangDialogue {
     private IWarenEingang service;
+
+    /* Dialog Klassen für den Eingabeprozess */
     private DialogueInteger<?> bestellungInput;
     private DialogueInteger<?> lieferantInput;
     private DialogueMap<WarenBestellung, Boolean> qualityInput;
     private DialogueMap<WarenBestellung, Integer> stueckzahl;
+
     /**
      * Legt fest, ob der ganze Stacktrace einer Exception ausgegeben werden soll oder nur die Nachricht.
      */
@@ -62,6 +65,7 @@ public class WarenEingangDialogue {
         Set<WarenBestellung> warenBestellungen;
         boolean qualityCheck;
         Map<WarenBestellung, Integer> stueckzahl;
+        /* Linie um die verschiedenen Ausgaben-Abschnitte zu trennen */
         String line = (new String(new char[50])).replace('\0', '―');
 
         /*
@@ -144,7 +148,7 @@ public class WarenEingangDialogue {
             WarenBestellung wb = geliefert.getKey();
             Integer gelieferteMenge = geliefert.getValue();
 
-            if (gelieferteMenge != wb.getBestellteMenge()) {
+            if (gelieferteMenge < wb.getBestellteMenge()) {
                 teilAnnahme = true;
             }
 
@@ -156,15 +160,13 @@ public class WarenEingangDialogue {
         if (teilAnnahme) {
             System.out.println("Teilannahme ausgeführt.");
             System.out.println("Teilzahlung veranlasst. Gesamtpreis: " + preisSus + "€");
-        }
-        else {
+        } else {
             System.out.println("Annahme ausgeführt.");
             System.out.println("Zahlung veranlasst. Gesamtpreis: " + preisSus + "€");
         }
     }
 
     /**
-     *
      * @param e
      */
     private void outputDatabaseException(DataBaseException e) {
