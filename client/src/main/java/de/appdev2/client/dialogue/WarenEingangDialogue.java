@@ -167,6 +167,7 @@ public class WarenEingangDialogue {
     }
 
     /**
+     * Gibt die DataBaseException aus.
      * @param e
      */
     private void outputDatabaseException(DataBaseException e) {
@@ -174,17 +175,29 @@ public class WarenEingangDialogue {
         this.printException(e);
     }
 
+    /**
+     * Gibt die IllegalInputException aus.
+     * @param e
+     */
     private void outputIllegalInputException(IllegalInputException e) {
         System.out.println("Der Server hat eine falsche Eingabe erkannt:");
         System.out.println(e.getMessage());
         System.out.println("\nEingabeprozess wird neugestartet...\n");
     }
 
+    /**
+     * Gibt die RemoteException aus.
+     * @param e
+     */
     private void outputRemoteException(RemoteException e) {
         System.out.println("Ein Netzwerk Fehler ist aufgetreten.");
         this.printException(e);
     }
 
+    /**
+     * Ausgabe der Exception Nachricht, falls {@link #debug} false ist, andernfalls Ausgabe des Stacktrace
+     * @param e
+     */
     private void printException(Exception e) {
         if (this.debug) {
             e.printStackTrace();
