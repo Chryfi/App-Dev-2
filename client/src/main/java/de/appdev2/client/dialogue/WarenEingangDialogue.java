@@ -45,15 +45,17 @@ public class WarenEingangDialogue {
 
         DialogueBoolean<WarenBestellung> qualityInput = new DialogueBoolean<>((wb) -> {
             return "Geben Sie die Qualität für die Ware: " + wb.getWare().getNr()
-                    + " | " + wb.getWare().getBezeichnung() + " ein.\ngut / schlecht";
+                    + " | \"" + wb.getWare().getBezeichnung() + "\" ein.\ngut / schlecht";
         }, (obj) -> "Falsche Eingabe: gut oder schlecht", new HashSet<>(Arrays.asList("gut")), new HashSet<>(Arrays.asList("gut", "schlecht")));
 
         this.qualityInput = new DialogueMap<>("Geben Sie die Qualität für die Waren ein.", qualityInput);
 
 
         DialogueInteger<WarenBestellung> stueckzahlInput = new DialogueInteger<>((wb) -> {
-            return "Geben Sie die gelieferte Stückzahl für die Ware " + wb.getWare().getNr() + " ein.";
-        }, (wb) -> "Falsche Eingabe. Geben Sie erneut die Stückzahl für die Ware " + wb.getWare().getNr() + " ein.", 0);
+            return "Geben Sie die gelieferte Stückzahl für die Ware " + wb.getWare().getNr() + " | \""
+                    + wb.getWare().getBezeichnung() + "\" ein.\nBestellt wurde " + wb.getBestellteMenge() + " Stück";
+        }, (wb) -> "Falsche Eingabe. Geben Sie erneut die Stückzahl für die Ware " + wb.getWare().getNr() + " | \""
+                + wb.getWare().getBezeichnung() + "\" ein.", 0);
 
         this.stueckzahl = new DialogueMap<>("Geben Sie die Stückzahlen für die Waren ein.", stueckzahlInput);
     }
@@ -66,7 +68,7 @@ public class WarenEingangDialogue {
         boolean qualityCheck;
         Map<WarenBestellung, Integer> stueckzahl;
         /* Linie um die verschiedenen Ausgaben-Abschnitte zu trennen */
-        String line = (new String(new char[50])).replace('\0', '―');
+        String line = (new String(new char[84])).replace('\0', '―');
 
         /*
          * Gebe die Bestellnr und Lieferantennr ein um zu prüfen, ob sie existiert.
